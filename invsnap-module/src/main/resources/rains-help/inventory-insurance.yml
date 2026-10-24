@@ -1,0 +1,83 @@
+id: inventory-insurance
+title: Death & item insurance
+summary: Pay a premium to keep your inventory when you die, or to get one valuable item back whatever happens to it.
+intro: |
+  Dying is one thing. Dying with a full set of enchanted gear is another. Insurance is for people who would rather pay a little than cry a lot.
+icon: TOTEM_OF_UNDYING
+category: Items & enchantments
+order: 60
+module: invsnap
+when: invsnap:insurance.enabled || invsnap:item-insurance.enabled
+aliases: [insurance, insure, insured, keep-inventory, death, died, die, lost-items, gear]
+keywords: [premium, policy, agent, deductible, renewal, keepinventory, respawn, lava, void, despawn]
+commands: [insurance]
+related: [basics]
+sections:
+  - question: What is insurance?
+    title: Overview
+    text: |
+      Two kinds, and both cost money:
+      {if:invsnap:insurance.enabled}<white>Death insurance</white> — you keep your whole inventory when you die.{/if}
+      {if:invsnap:item-insurance.enabled}<white>Item insurance</white> — one item of yours comes back to you if it is destroyed or you die.{/if}
+      {if:core:insurance-in-person-only}You arrange it by talking to an insurance agent standing in the world — the command is not enough here.{else}Type {run:/insurance} to open the Insurance screen.{/if}
+  - question: How do I find an insurance agent?
+    title: The agent
+    when: core:insurance-in-person-only
+    text: |
+      On this server insurance is only sold in person: {cmd:/insurance} will send you to an agent instead of helping you. Look for the insurance agent standing in the world and right-click them to open the Insurance screen. Ask staff or look near spawn if you cannot find one.
+  - question: How does death insurance work?
+    title: Death insurance
+    when: invsnap:insurance.enabled
+    text: |
+      Switch it on with {cmd:/insurance on} (or in the Insurance screen) and off with {cmd:/insurance off}. It stays on until you switch it off.
+      When you die insured, the premium is taken at that moment and you keep your inventory — armour and off hand included.
+      {if:invsnap:insurance.keep-xp}Your experience level is kept too.{else}Only items are insured: your experience still drops.{/if}
+      Can't pay? Then that death is an ordinary one, and you will be told so. Insurance does not extend credit.
+  - question: What does death insurance cost?
+    title: Death premium
+    when: invsnap:insurance.enabled
+    text: |
+      {if:invsnap:insurance.price-percent > 0}{setting:invsnap:insurance.price-percent|percent} of what your inventory is worth at the moment you die — worth means the shop price of every item; things without a shop price count nothing.{else}No share of your inventory's value.{/if}
+      {if:invsnap:insurance.price-flat}Plus a flat {setting:invsnap:insurance.price-flat|money}.{/if}
+      {if:invsnap:insurance.most}One death never costs more than {setting:invsnap:insurance.most|money}.{/if}
+      {cmd:/insurance on} and {cmd:/insurance off} tell you roughly what dying right now would cost. Nothing is charged until you actually die.
+  - question: Where does death insurance apply?
+    title: Insured worlds
+    when: invsnap:insurance.enabled
+    text: |
+      {if:invsnap:insurance.worlds}Only in these worlds: <white>{setting:invsnap:insurance.worlds}</white>. A death anywhere else is not covered, however insured you are.{else}In every world.{/if}
+  - question: How do I insure an item?
+    title: Item insurance
+    when: invsnap:item-insurance.enabled
+    text: |
+      Hold the item in your main hand and type {cmd:/insurance item} (or use the Insurance screen). The premium is charged first, then the item is marked as insured.
+      Only items that do not stack can be insured — tools, weapons, armour, elytra. You can have {setting:invsnap:item-insurance.most-items|count} insured at once, and an item must have a shop price to be insured by.
+  - question: What does item insurance cover?
+    title: What it covers
+    when: invsnap:item-insurance.enabled
+    text: |
+      If the item is destroyed — it despawns, burns, falls into lava, a cactus, an explosion or the void — it goes straight back to you instead. If you die, it leaves the drops and comes back once you respawn.
+      You can still drop it or lend it out; the policy follows the item. If somebody else dies holding it, it goes back to <i>you</i>, not them.
+      It does <i>not</i> cover wear: if the item breaks from use, the policy ends.
+  - question: What does item insurance cost?
+    title: Item premium
+    when: invsnap:item-insurance.enabled
+    text: |
+      {if:invsnap:item-insurance.price-percent > 0}{setting:invsnap:item-insurance.price-percent|percent} of the item's shop price{else}No share of the item's price{/if}{if:invsnap:item-insurance.price-flat}, plus a flat {setting:invsnap:item-insurance.price-flat|money}{/if}{if:invsnap:item-insurance.least}, and never less than {setting:invsnap:item-insurance.least|money}{/if}.
+      The premium comes round every {setting:invsnap:item-insurance.every-hours|hours}. If you cannot pay it when it falls due, the policy ends and the item can drop like any other — you are told when you log in.
+      {if:invsnap:item-insurance.claim-fee}Each time an insured item is returned after <i>your</i> death, a deductible of {setting:invsnap:item-insurance.claim-fee|money} is charged. If you cannot pay it, you still get the item.{else}Getting an item back after your death is free.{/if}
+  - question: Where is my insured item?
+    title: Collecting items
+    when: invsnap:item-insurance.enabled
+    text: |
+      If you have room, it lands in your inventory. If not — or if you were dead, or away — it waits for you. You are told when something is waiting: make room, then collect it in {cmd:/insurance}. Items waiting are never lost, and nobody else can take them.
+  - question: How do I cancel a policy?
+    title: Cancelling
+    when: invsnap:item-insurance.enabled
+    text: |
+      Hold the insured item and type {cmd:/insurance item cancel}. The mark comes off the item at once and the policy ends. Nothing is refunded for the time already paid — a policy is not a trial.
+  - question: How do I place an insurance agent?
+    title: Placing agents
+    permission: rainsinvsnap.insurance.agents
+    text: |
+      Stand where the agent should be and type {cmd:/insurance agent place}. {cmd:/insurance agent remove} takes away the nearest one within four blocks. Their skin and whether insurance is sold only in person are Core settings (<white>core</white> in /settings).
