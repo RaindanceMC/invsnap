@@ -1,5 +1,6 @@
 package de.raindancer.modules.invsnap.screen;
 
+import de.raindancer.core.platform.util.Scheduling;
 import de.raindancer.core.ui.menu.Icons;
 import de.raindancer.core.ui.menu.Menu;
 import de.raindancer.core.ui.menu.PaginatedMenu;
@@ -25,6 +26,9 @@ import java.util.UUID;
  * SnapshotActionMenu}, which is where inspecting, comparing and restoring are each their own
  * button. Restoring is gated on {@code PermissionNodes.RESTORE} there, greyed rather than hidden;
  * this page only ever needed {@code PermissionNodes.BROWSE} to be opened at all.
+ *
+ * <p>The history is read once, off the server thread, by {@link #open}: it lives in the database, and
+ * a page drawn from it on the thread running the world stalls every player while it waits.
  */
 public final class SnapshotHistoryMenu extends PaginatedMenu<Snapshot> implements IInvSnapScreen {
 
@@ -35,13 +39,24 @@ public final class SnapshotHistoryMenu extends PaginatedMenu<Snapshot> implement
     private final InvSnapServices services;
     private final UUID targetId;
     private final String targetName;
+    private final List<Snapshot> history;
 
-    public SnapshotHistoryMenu(InvSnapServices services, Player viewer, UUID targetId,
-                               String targetName, Menu parent) {
+    private SnapshotHistoryMenu(InvSnapServices services, Player viewer, UUID targetId,
+                                String targetName, Menu parent, List<Snapshot> history) {
         super(viewer, services.brand(), parent);
         this.services = services;
         this.targetId = targetId;
         this.targetName = targetName == null ? targetId.toString() : targetName;
+        this.history = history;
+    }
+
+    /** Reads the history off the server thread, then opens it for {@code viewer} on theirs. */
+    public static void open(InvSnapServices services, Player viewer, UUID targetId, String targetName, Menu parent) {
+        Scheduling.async(services.plugin(), () -> {
+            List<Snapshot> history = services.snapshots().historyOf(targetId);
+            Scheduling.entity(services.plugin(), viewer,
+                    () -> new SnapshotHistoryMenu(services, viewer, targetId, targetName, parent, history).open());
+        });
     }
 
     @Override
@@ -56,7 +71,7 @@ public final class SnapshotHistoryMenu extends PaginatedMenu<Snapshot> implement
 
     @Override
     protected List<Snapshot> entries() {
-        return services.snapshots().historyOf(targetId);
+        return history;
     }
 
     @Override

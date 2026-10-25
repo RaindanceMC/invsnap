@@ -45,7 +45,7 @@
              be collected are one shared table claimed exactly once on any server; a premium is taken by one server. -->
         <!-- 1.9.1: snapshots are written, pruned and premiums charged off the server thread (the capture stays on the player's). -->
         <!-- 1.9.2: writing a snapshot and the prune take the player's lock in the store, so neither undoes the other (security review). -->
-        <plugin.version>1.10.0</plugin.version>
+        <plugin.version>1.11.0</plugin.version>
     </properties>
 
     <dependencies>

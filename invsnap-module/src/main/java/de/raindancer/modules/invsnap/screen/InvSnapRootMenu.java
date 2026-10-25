@@ -1,6 +1,7 @@
 package de.raindancer.modules.invsnap.screen;
 
 import de.raindancer.core.data.settings.SettingsMenu;
+import de.raindancer.core.platform.util.Scheduling;
 import de.raindancer.core.ui.menu.Icons;
 import de.raindancer.core.ui.menu.PaginatedMenu;
 import de.raindancer.modules.invsnap.InvSnapServices;
@@ -20,6 +21,7 @@ import java.util.List;
  * Every player this server has ever taken a snapshot of, newest activity first — what bare
  * {@code /invsnap} opens. {@code /invsnap <player>} skips straight past this to that player's own
  * history; this page exists for the times the admin does not already know who they are looking for.
+ * The roster is read off the server thread by {@link #open}, like {@link SnapshotHistoryMenu}'s history.
  */
 public final class InvSnapRootMenu extends PaginatedMenu<TrackedPlayer> implements IInvSnapScreen {
 
@@ -30,10 +32,20 @@ public final class InvSnapRootMenu extends PaginatedMenu<TrackedPlayer> implemen
     private static final String SETTINGS = "rainscore.settings";
 
     private final InvSnapServices services;
+    private final List<TrackedPlayer> tracked;
 
-    public InvSnapRootMenu(InvSnapServices services, Player viewer) {
+    private InvSnapRootMenu(InvSnapServices services, Player viewer, List<TrackedPlayer> tracked) {
         super(viewer, services.brand(), null);
         this.services = services;
+        this.tracked = tracked;
+    }
+
+    /** Reads every tracked player off the server thread, then opens the page for {@code viewer} on theirs. */
+    public static void open(InvSnapServices services, Player viewer) {
+        Scheduling.async(services.plugin(), () -> {
+            List<TrackedPlayer> tracked = services.snapshots().tracked();
+            Scheduling.entity(services.plugin(), viewer, () -> new InvSnapRootMenu(services, viewer, tracked).open());
+        });
     }
 
     @Override
@@ -60,7 +72,7 @@ public final class InvSnapRootMenu extends PaginatedMenu<TrackedPlayer> implemen
 
     @Override
     protected List<TrackedPlayer> entries() {
-        return services.snapshots().tracked();
+        return tracked;
     }
 
     @Override
@@ -80,7 +92,7 @@ public final class InvSnapRootMenu extends PaginatedMenu<TrackedPlayer> implemen
 
     @Override
     protected void onClick(TrackedPlayer entry, InventoryClickEvent event) {
-        new SnapshotHistoryMenu(services, viewer, entry.id(), entry.name(), this).open();
+        SnapshotHistoryMenu.open(services, viewer, entry.id(), entry.name(), this);
     }
 
     @Override

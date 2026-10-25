@@ -59,7 +59,7 @@ public final class SnapshotActionMenu extends Menu implements IInvSnapScreen {
         band(MenuLayout.WHO, 2, Icons.of(Material.CHEST, "<white>Inspect",
                         "<gray>Look at every item in this",
                         "<gray>snapshot, exactly as it was."),
-                event -> new SnapshotDetailScreen(services, viewer, this, snapshot, null, targetName)
+                event -> new SnapshotDetailScreen(services, viewer, this, snapshot, null, targetId, targetName)
                         .open());
 
         Player live = Bukkit.getPlayer(targetId);
@@ -69,7 +69,7 @@ public final class SnapshotActionMenu extends Menu implements IInvSnapScreen {
                         "<gray>Slot by slot, against what",
                         "<gray>" + targetName + " is carrying right now."),
                 targetName + " is not online",
-                event -> new SnapshotDetailScreen(services, viewer, this, snapshot, liveSnapshot, targetName)
+                event -> new SnapshotDetailScreen(services, viewer, this, snapshot, liveSnapshot, targetId, targetName)
                         .open());
 
         band(MenuLayout.WHO, 6, viewer.hasPermission(PermissionNodes.RESTORE),

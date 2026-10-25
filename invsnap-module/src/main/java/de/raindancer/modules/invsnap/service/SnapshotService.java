@@ -2,6 +2,7 @@ package de.raindancer.modules.invsnap.service;
 
 import de.raindancer.core.data.nbt.ItemText;
 import de.raindancer.core.platform.log.LogChannel;
+import de.raindancer.core.platform.util.Inventories;
 import de.raindancer.modules.invsnap.InvSnapSettings;
 import de.raindancer.modules.invsnap.model.Snapshot;
 import de.raindancer.modules.invsnap.model.TrackedPlayer;
@@ -136,6 +137,28 @@ public final class SnapshotService implements IInvSnapService {
         inventory.setItemInOffHand(ItemText.decode(snapshot.offHand()));
         log.info("Restored a snapshot from {} into {}'s live inventory.",
                 snapshot.takenAt(), target.getName());
+    }
+
+    /** What giving one item back came to. */
+    public enum ItemRestore { GIVEN, EMPTY_SLOT, NO_ROOM }
+
+    /**
+     * Gives back the one item in {@code slot} (restore order, see {@link Snapshot#SLOTS}) on top of what
+     * {@code target} carries now; nothing else is touched. Refused rather than dropped when it does not fit,
+     * so an item worth restoring never lands on the ground beside somebody busy fighting.
+     */
+    public ItemRestore restoreItem(Player target, Snapshot snapshot, int slot) {
+        ItemStack item = ItemText.decode(snapshot.slot(slot));
+        if (item == null || item.getType().isAir()) {
+            return ItemRestore.EMPTY_SLOT;
+        }
+        if (!Inventories.fits(target, List.of(item))) {
+            return ItemRestore.NO_ROOM;
+        }
+        target.getInventory().addItem(item.clone());
+        log.info("Gave {}x {} from the snapshot of {} (slot {}) back to {}.", item.getAmount(),
+                item.getType().getKey(), snapshot.takenAt(), slot, target.getName());
+        return ItemRestore.GIVEN;
     }
 
     /** Every slot, empty ones included — see {@link Snapshot}'s own javadoc for why. */

@@ -51,7 +51,7 @@ import java.util.UUID;
  */
 public final class InvSnapModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("invsnap", "Inventory Snapshots", "1.10.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("invsnap", "Inventory Snapshots", "1.11.0")
             .describedAs("Periodic inventory snapshots for every online player, with an admin "
                     + "screen to browse a player's history and restore one.")
             .by("Raindancer118");
@@ -180,12 +180,12 @@ public final class InvSnapModule implements FlexModule {
         public void history(Player admin, UUID target, String targetName) {
             // null parent: this is an entry point from a command, and Core draws no Back button on
             // a parentless menu — right, since there is nowhere behind it to go back to.
-            new SnapshotHistoryMenu(services, admin, target, targetName, null).open();
+            SnapshotHistoryMenu.open(services, admin, target, targetName, null);
         }
 
         @Override
         public void root(Player admin) {
-            new InvSnapRootMenu(services, admin).open();
+            InvSnapRootMenu.open(services, admin);
         }
 
         @Override

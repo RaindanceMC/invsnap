@@ -20,7 +20,7 @@ sections:
   - question: I lost my items. What now?
     title: Lost items
     text: |
-      Ask a staff member. A snapshot is a copy of what you carried, so they can restore it into your inventory — but only while you are online, and what you carry at that moment is replaced, not merged. Tell them roughly <i>when</i> it happened.
+      Ask a staff member. A snapshot is a copy of what you carried, so they can give back a single lost item, or restore the whole inventory — but only while you are online, and a whole restore replaces what you carry at that moment. Tell them roughly <i>when</i> it happened.
   - question: How do I browse someone's snapshots?
     title: Browsing
     permission: rainsinvsnap.invsnap.browse
@@ -32,3 +32,4 @@ sections:
     permission: rainsinvsnap.invsnap.restore
     text: |
       Open the snapshot and click <white>Restore</white>, then confirm. The player must be online, and whatever they carry now is replaced by the snapshot. Compare first if you are unsure — it shows what differs.
+      Only one item lost? Click <white>Inspect</white> (or <white>Compare to now</white>) and click that item, then confirm: just that one goes back, on top of what they carry, and nothing is replaced. If their inventory is full, nothing is given and you are told so.

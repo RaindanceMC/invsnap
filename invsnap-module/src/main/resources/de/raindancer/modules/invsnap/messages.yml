@@ -15,6 +15,9 @@ invsnap:
   restore:
     no-permission: "<red>You may browse this, but not restore from it."
     offline: "<red><player> is not online right now — a restore is written into a live inventory. Try again once they are back."
+    item-given: "<green>Gave <white><item></white> back to <white><player></white>. Nothing else in their inventory changed."
+    item-no-room: "<red><player> has no room for <white><item></white>. Once a slot is free, click it again."
+    item-gone: "<yellow>That slot was empty in this snapshot, so there is nothing to give back."
 
   agent:
     placed: "<green>An <white>insurance agent</white> stands here now. Players right click them for their insurance. <gray>/insurance agent remove takes them away."
