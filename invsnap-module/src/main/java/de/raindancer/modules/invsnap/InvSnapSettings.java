@@ -114,7 +114,7 @@ public record InvSnapSettings(
         String itemInsuranceClaimFee,
 
         @In("invsnap") @Title("Only snapshot at death")
-        @Describe("On: no timed snapshots and none when somebody logs off — only the one taken the instant "
+        @Describe("On: no timed snapshots and none when somebody logs off, only the one taken the instant "
                 + "before a player dies. Off: the interval above applies.")
         @Key("snapshot.only-on-death")
         boolean onlyOnDeath,

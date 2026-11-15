@@ -76,7 +76,7 @@ public final class SnapshotDetailScreen extends Menu implements IInvSnapScreen {
     @Override
     protected Component title() {
         String mode = liveSlots == null ? "Snapshot" : "Compare";
-        return MINI.deserialize("<dark_gray>" + mode + " — " + targetName + " — " + STAMP.format(takenAt));
+        return MINI.deserialize("<dark_gray>" + mode + ": " + targetName + ", " + STAMP.format(takenAt));
     }
 
     @Override
@@ -163,7 +163,7 @@ public final class SnapshotDetailScreen extends Menu implements IInvSnapScreen {
         }
         meta.lore(lore);
         if (empty) {
-            meta.displayName(Icons.name("<gray>" + label + " — empty"));
+            meta.displayName(Icons.name("<gray>" + label + " (empty)"));
         }
         shown.setItemMeta(meta);
         return shown;
@@ -176,7 +176,7 @@ public final class SnapshotDetailScreen extends Menu implements IInvSnapScreen {
         }
         ItemStack live = ItemText.decode(liveEncoded);
         String description = live == null ? "empty" : describe(live);
-        return "<red>Different now — " + targetName + " carries: " + description;
+        return "<red>Different now. " + targetName + " carries: " + description;
     }
 
     private static String nullToEmpty(String value) {

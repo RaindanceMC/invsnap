@@ -61,7 +61,7 @@ public final class SnapshotHistoryMenu extends PaginatedMenu<Snapshot> implement
 
     @Override
     protected Component title() {
-        return MINI.deserialize("<dark_gray>Snapshots — " + targetName);
+        return MINI.deserialize("<dark_gray>Snapshots: " + targetName);
     }
 
     @Override
