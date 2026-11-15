@@ -2,7 +2,7 @@ id: inventory-snapshots
 title: Inventory snapshots
 summary: How your inventory is saved automatically, and how staff browse and restore it after a bad death.
 intro: |
-  A quiet safety net: the server keeps looking at what you carry, so an accident can be undone. You do nothing — staff do the undoing.
+  The server saves copies of your inventory so that staff can undo an accident. You do nothing.
 icon: CHEST
 category: Items & enchantments
 order: 61
@@ -15,12 +15,12 @@ sections:
   - question: Is my inventory saved somewhere?
     title: What gets saved
     text: |
-      Yes. {if:invsnap:snapshot.only-on-death}A snapshot of your inventory is taken the instant before you die — only then.{else}A snapshot is taken every {setting:invsnap:snapshot.interval-seconds|seconds} while you are online, when you log off, and the instant before you die.{/if}
-      {if:invsnap:snapshot.retention-days > 0}Snapshots are kept for {setting:invsnap:snapshot.retention-days|days} at most, and{else}Snapshots are kept until{/if} the newest {setting:invsnap:snapshot.retention-count|count} are all that remain — older ones make room.
+      Yes. {if:invsnap:snapshot.only-on-death}A snapshot of your inventory is taken the instant before you die, and at no other time.{else}A snapshot is taken every {setting:invsnap:snapshot.interval-seconds|seconds} while you are online, when you log off, and the instant before you die.{/if}
+      {if:invsnap:snapshot.retention-days > 0}Snapshots are kept for {setting:invsnap:snapshot.retention-days|days} at most, and{else}Snapshots are kept until{/if} the newest {setting:invsnap:snapshot.retention-count|count} are all that remain. Older ones make room.
   - question: I lost my items. What now?
     title: Lost items
     text: |
-      Ask a staff member. A snapshot is a copy of what you carried, so they can give back a single lost item, or restore the whole inventory — but only while you are online, and a whole restore replaces what you carry at that moment. Tell them roughly <i>when</i> it happened.
+      Ask a staff member. A snapshot is a copy of what you carried, so they can give back a single lost item or restore the whole inventory. This only works while you are online, and a whole restore replaces what you carry at that moment. Tell them roughly <i>when</i> it happened.
   - question: How do I browse someone's snapshots?
     title: Browsing
     permission: rainsinvsnap.invsnap.browse
@@ -31,5 +31,5 @@ sections:
     title: Restoring
     permission: rainsinvsnap.invsnap.restore
     text: |
-      Open the snapshot and click <white>Restore</white>, then confirm. The player must be online, and whatever they carry now is replaced by the snapshot. Compare first if you are unsure — it shows what differs.
+      Open the snapshot and click <white>Restore</white>, then confirm. The player must be online, and whatever they carry now is replaced by the snapshot. Compare first if you are unsure. It shows what differs.
       Only one item lost? Click <white>Inspect</white> (or <white>Compare to now</white>) and click that item, then confirm: just that one goes back, on top of what they carry, and nothing is replaced. If their inventory is full, nothing is given and you are told so.
