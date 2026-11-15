@@ -9,29 +9,29 @@ invsnap:
   only-a-player: "<red>Only a player standing in the world can do that."
   unknown-player: "<red>The server has never seen anybody called <white><player></white>. Check the spelling."
   selector-refused: "<red><white><selector></white> is not yours to use, or not written right. A name works just as well."
-  selector-nobody: "<yellow><white><selector></white> did not match anybody, so there is no history to open. You cannot rewind nobody."
+  selector-nobody: "<yellow><white><selector></white> did not match anybody, so there is no history to open."
   too-many: "<yellow><white><selector></white> matches <white><count></white> players, and a history belongs to one. Pick one."
 
   restore:
     no-permission: "<red>You may browse this, but not restore from it."
-    offline: "<red><player> is not online right now — a restore is written into a live inventory. Try again once they are back."
+    offline: "<red><player> is not online. A restore is written into a live inventory, so try again once they are back."
     item-given: "<green>Gave <white><item></white> back to <white><player></white>. Nothing else in their inventory changed."
     item-no-room: "<red><player> has no room for <white><item></white>. Once a slot is free, click it again."
     item-gone: "<yellow>That slot was empty in this snapshot, so there is nothing to give back."
 
   agent:
-    placed: "<green>An <white>insurance agent</white> stands here now. Players right click them for their insurance. <gray>/insurance agent remove takes them away."
+    placed: "<green>An <white>insurance agent</white> stands here now. Players right-click them to open their insurance. <gray>/insurance agent remove takes it away."
     removed: "<green>The nearest insurance agent is gone."
     none: "<red>There is no insurance agent within four blocks of you."
   insurance:
     disabled: "<yellow>Death insurance is not offered on this server."
     usage: "<gray>/insurance [on|off|item [cancel]]"
     death-disabled: "<yellow>Death insurance is not offered on this server. Item insurance is: <white>/insurance item</white>."
-    now-on: "<green>You are insured. If you die you pay the premium and keep your inventory — about <white><price></white> for what you carry right now."
+    now-on: "<green>You are insured. If you die you pay the premium and keep your inventory. The premium is about <white><price></white> for what you carry now."
     now-off: "<yellow>You are no longer insured. A death drops your things as usual."
-    not-saved: "<red>Your choice could not be saved just now. Try again in a moment."
+    not-saved: "<red>Your choice could not be saved. Try again in a moment."
     status-on: "<green>You are insured. Dying now would cost about <white><price></white>."
-    status-off: "<gray>You are not insured. <white>/insurance on</white> insures you; dying now would cost about <white><price></white>."
+    status-off: "<gray>You are not insured. <white>/insurance on</white> insures you. Dying now would cost about <white><price></white>."
     paid: "<green>Your insurance paid out: you kept your inventory for <white><price></white>."
     free: "<green>Your insurance paid out: you kept your inventory at no charge."
     unpaid:
