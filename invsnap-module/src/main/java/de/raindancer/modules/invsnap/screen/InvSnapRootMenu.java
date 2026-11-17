@@ -78,9 +78,7 @@ public final class InvSnapRootMenu extends PaginatedMenu<TrackedPlayer> implemen
     @Override
     protected ItemStack emptyIcon() {
         return Icons.of(Material.COBWEB, "<gray>Nobody has a snapshot yet",
-                "<gray>One is taken automatically every "
-                        + services.config().snapshotInterval().toSeconds() + " seconds "
-                        + "while a player is online.");
+                "<gray>" + services.config().whenTaken());
     }
 
     @Override

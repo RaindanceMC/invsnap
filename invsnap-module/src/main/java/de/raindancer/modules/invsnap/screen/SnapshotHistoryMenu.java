@@ -77,9 +77,7 @@ public final class SnapshotHistoryMenu extends PaginatedMenu<Snapshot> implement
     @Override
     protected ItemStack emptyIcon() {
         return Icons.of(Material.COBWEB, "<gray>No snapshots yet",
-                "<gray>One is taken automatically every "
-                        + services.config().snapshotInterval().toSeconds() + " seconds "
-                        + "while " + targetName + " is online.");
+                "<gray>" + services.config().whenTaken());
     }
 
     @Override

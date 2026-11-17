@@ -39,7 +39,7 @@ public final class AutoSnapshotService implements IInvSnapService {
 
     /** Called once a second with who is online right now; takes a snapshot of whoever is due one. */
     public void tick(Iterable<? extends Player> online, Instant now) {
-        if (settings.onlyOnDeath()) {
+        if (settings.onlyOnDeath() || !settings.timed()) {
             return;
         }
         for (Player player : online) {
@@ -50,6 +50,15 @@ public final class AutoSnapshotService implements IInvSnapService {
                 lastSnapshotAt.put(id, now);
             }
         }
+    }
+
+    /** One the moment somebody arrives, which also starts their timer, so the next tick does not repeat it. */
+    public void joined(Player player, Instant now) {
+        if (settings.onlyOnDeath()) {
+            return;
+        }
+        snapshots.takeAndStore(player);
+        lastSnapshotAt.put(player.getUniqueId(), now);
     }
 
     /** False when only the death snapshot is wanted. */

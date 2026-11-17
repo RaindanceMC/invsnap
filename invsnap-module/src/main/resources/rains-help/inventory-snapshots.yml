@@ -15,7 +15,7 @@ sections:
   - question: Is my inventory saved somewhere?
     title: What gets saved
     text: |
-      Yes. {if:invsnap:snapshot.only-on-death}A snapshot of your inventory is taken the instant before you die, and at no other time.{else}A snapshot is taken every {setting:invsnap:snapshot.interval-seconds|seconds} while you are online, when you log off, and the instant before you die.{/if}
+      Yes. {if:invsnap:snapshot.only-on-death}A snapshot of your inventory is taken the instant before you die, and at no other time.{/if}{if:!invsnap:snapshot.only-on-death && invsnap:snapshot.interval-seconds}A snapshot is taken every {setting:invsnap:snapshot.interval-seconds|seconds} while you are online, when you join, when you log off, and the instant before you die.{/if}{if:!invsnap:snapshot.only-on-death && !invsnap:snapshot.interval-seconds}A snapshot is taken when you join, when you log off, and the instant before you die.{/if}
       {if:invsnap:snapshot.retention-days > 0}Snapshots are kept for {setting:invsnap:snapshot.retention-days|days} at most, and{else}Snapshots are kept until{/if} the newest {setting:invsnap:snapshot.retention-count|count} are all that remain. Older ones make room.
   - question: I lost my items. What now?
     title: Lost items

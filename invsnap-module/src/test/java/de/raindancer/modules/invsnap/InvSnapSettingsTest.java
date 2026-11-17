@@ -43,12 +43,30 @@ class InvSnapSettingsTest {
         @Test
         @DisplayName("the interval is clamped into its declared range")
         void intervalIsClamped() {
-            assertThat(defaults.withSnapshotIntervalSeconds(0).snapshotInterval())
+            assertThat(defaults.withSnapshotIntervalSeconds(10).snapshotInterval())
                     .isEqualTo(Duration.ofSeconds(30));
             assertThat(defaults.withSnapshotIntervalSeconds(999_999).snapshotInterval())
                     .isEqualTo(Duration.ofSeconds(86_400));
             assertThat(defaults.withSnapshotIntervalSeconds(120).snapshotInterval())
                     .isEqualTo(Duration.ofSeconds(120));
+        }
+
+        @Test
+        @DisplayName("an interval of 0 switches the timed snapshots off; anything else keeps them")
+        void zeroMeansNoTimer() {
+            assertThat(defaults.withSnapshotIntervalSeconds(0).timed()).isFalse();
+            assertThat(defaults.withSnapshotIntervalSeconds(-5).timed()).isFalse();
+            assertThat(defaults.withSnapshotIntervalSeconds(10).timed()).isTrue();
+            assertThat(defaults.timed()).isTrue();
+        }
+
+        @Test
+        @DisplayName("the menus say when snapshots are taken, as set")
+        void whenTaken() {
+            assertThat(defaults.whenTaken()).contains("every 5 minutes").contains("joins, leaves or dies");
+            assertThat(defaults.withSnapshotIntervalSeconds(0).whenTaken())
+                    .doesNotContain("every").contains("joins, leaves or dies");
+            assertThat(defaults.withOnlyOnDeath(true).whenTaken()).doesNotContain("joins").contains("dies");
         }
 
         @Test

@@ -22,6 +22,7 @@ import de.raindancer.modules.invsnap.store.ItemPolicyStore;
 import de.raindancer.modules.invsnap.store.ItemReturns;
 import java.util.function.Predicate;
 import de.raindancer.modules.invsnap.listener.PlayerDeathSnapshotListener;
+import de.raindancer.modules.invsnap.listener.PlayerJoinSnapshotListener;
 import de.raindancer.modules.invsnap.listener.PlayerQuitSnapshotListener;
 import de.raindancer.modules.invsnap.rules.RetentionRule;
 import de.raindancer.modules.invsnap.rules.SnapshotDueRule;
@@ -51,7 +52,7 @@ import java.util.UUID;
  */
 public final class InvSnapModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("invsnap", "Inventory Snapshots", "1.12.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("invsnap", "Inventory Snapshots", "1.13.0")
             .describedAs("Periodic inventory snapshots for every online player, with an admin "
                     + "screen to browse a player's history and restore one.")
             .by("Raindancer118");
@@ -123,6 +124,7 @@ public final class InvSnapModule implements FlexModule {
                 server::getPlayer));
         context.listener(new PlayerDeathInsuranceListener(insurance, context.core().messages()));
         context.listener(new PlayerQuitSnapshotListener(snapshotService, autoSnapshotService));
+        context.listener(new PlayerJoinSnapshotListener(context.plugin(), autoSnapshotService));
         context.listener(new PlayerDeathSnapshotListener(snapshotService));
 
         services = new InvSnapServices(context.plugin(), server, log, context.core().messages(),
@@ -175,8 +177,7 @@ public final class InvSnapModule implements FlexModule {
             context.closeWith(timer::cancel);
         }
 
-        log.info("Inventory snapshots are up: every {}s, {} kept per player.",
-                settings.current().snapshotInterval().toSeconds(),
+        log.info("Inventory snapshots are up. {} {} kept per player.", settings.current().whenTaken(),
                 settings.current().retentionCountClamped());
     }
 

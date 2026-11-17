@@ -127,4 +127,39 @@ class AutoSnapshotServiceTest {
     void snapshotsOnQuitByDefault() {
         assertThat(service.snapshotsOnQuit()).isTrue();
     }
+
+    @Test
+    @DisplayName("interval 0: the timer takes nothing, but joining and leaving each take one")
+    void noTimerStillJoinAndLeave() {
+        service.settings(new InvSnapSettings(0, 24));
+
+        service.tick(List.of(player), Instant.now());
+        verify(snapshots, never()).takeAndStore(any());
+
+        when(player.getUniqueId()).thenReturn(playerId);
+        service.joined(player, Instant.now());
+        verify(snapshots).takeAndStore(player);
+        assertThat(service.snapshotsOnQuit()).isTrue();
+    }
+
+    @Test
+    @DisplayName("the snapshot at joining counts: the timer does not take another straight after")
+    void joiningCountsForTheTimer() {
+        when(player.getUniqueId()).thenReturn(playerId);
+        Instant joined = Instant.now();
+        service.joined(player, joined);
+        service.tick(List.of(player), joined.plusSeconds(1));
+
+        verify(snapshots, org.mockito.Mockito.times(1)).takeAndStore(player);
+    }
+
+    @Test
+    @DisplayName("only-on-death: nothing at joining either")
+    void onlyOnDeathNothingAtJoin() {
+        service.settings(new InvSnapSettings(300, 24).withOnlyOnDeath(true));
+
+        service.joined(player, Instant.now());
+
+        verify(snapshots, never()).takeAndStore(any());
+    }
 }

@@ -27,9 +27,10 @@ import java.time.Duration;
 })
 public record InvSnapSettings(
 
-        @In("invsnap") @Title("Snapshot interval") @Range(min = 30, max = 86400)
+        @In("invsnap") @Title("Snapshot interval") @Range(min = 0, max = 86400)
         @Describe("Seconds between one automatic snapshot of every online player's inventory and "
-                + "the next. Five minutes by default.")
+                + "the next. Five minutes by default. 0: no timed snapshots, only when somebody joins, "
+                + "leaves or dies.")
         @Key("snapshot.interval-seconds")
         int snapshotIntervalSeconds,
 
@@ -115,7 +116,8 @@ public record InvSnapSettings(
 
         @In("invsnap") @Title("Only snapshot at death")
         @Describe("On: no timed snapshots and none when somebody logs off, only the one taken the instant "
-                + "before a player dies. Off: the interval above applies.")
+                + "before a player dies. Off: the interval above applies, and one is taken when somebody joins and when "
+                + "they leave.")
         @Key("snapshot.only-on-death")
         boolean onlyOnDeath,
 
@@ -134,6 +136,23 @@ public record InvSnapSettings(
     public static final InvSnapSettings DEFAULTS =
             new InvSnapSettings(300, 24, false, 0, "0", "0", false, List.of(),
                     false, 0, "0", "0", 168, 3, "0", false, 7);
+
+    /** False when the interval is 0: no snapshots on a timer. */
+    public boolean timed() {
+        return snapshotIntervalSeconds > 0;
+    }
+
+    /** When a snapshot is taken, as one sentence for the menus. */
+    public String whenTaken() {
+        if (onlyOnDeath) {
+            return "One is taken the instant a player dies.";
+        }
+        if (!timed()) {
+            return "One is taken when a player joins, leaves or dies.";
+        }
+        return "One is taken every " + de.raindancer.core.world.time.Times.describe(snapshotInterval())
+                + " while a player is online, and whenever somebody joins, leaves or dies.";
+    }
 
     /** {@link #snapshotIntervalSeconds}, clamped and widened into a real {@link Duration}. */
     public Duration snapshotInterval() {
