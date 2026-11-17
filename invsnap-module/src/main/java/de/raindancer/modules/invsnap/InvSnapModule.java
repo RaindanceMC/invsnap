@@ -51,7 +51,7 @@ import java.util.UUID;
  */
 public final class InvSnapModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("invsnap", "Inventory Snapshots", "1.11.1")
+    private static final ModuleInfo INFO = ModuleInfo.of("invsnap", "Inventory Snapshots", "1.12.0")
             .describedAs("Periodic inventory snapshots for every online player, with an admin "
                     + "screen to browse a player's history and restore one.")
             .by("Raindancer118");
@@ -134,6 +134,15 @@ public final class InvSnapModule implements FlexModule {
         InsuranceDeskOffer atAgent = new InsuranceDeskOffer(() -> services);
         ServiceDesks.offer(ServiceDesk.INSURANCE, atAgent);
         context.closeWith(() -> ServiceDesks.withdraw(atAgent));
+
+        // Death insurance is on /preferences (Core 2.103.0); /insurance on|off stays as the shortcut.
+        try {
+            de.raindancer.core.ui.preference.Preference death = InvSnapPreferences.insurance(() -> services);
+            de.raindancer.core.ui.preference.Preferences.offer(context.plugin(), death);
+            context.closeWith(() -> de.raindancer.core.ui.preference.Preferences.withdraw(death));
+        } catch (LinkageError olderCore) {
+            log.info("RainsCore is older than 2.103.0: death insurance is not on /preferences.");
+        }
 
         InsuranceProfileExtension profile = new InsuranceProfileExtension(() -> services);
         ProfileExtensions.register(profile);

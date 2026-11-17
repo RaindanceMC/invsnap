@@ -49,20 +49,24 @@ public final class InsuranceCommand implements IInvSnapCommand {
         }
         String word = args.length == 0 ? "" : args[0].toLowerCase(Locale.ROOT);
         switch (word) {
-            case "on", "off" -> {
-                if (!insurance.enabled()) {
-                    live.messages().send(player, "invsnap.insurance.death-disabled");
-                } else if (!insurance.setInsured(player.getUniqueId(), word.equals("on"))) {
-                    live.messages().send(player, "invsnap.insurance.not-saved");
-                } else if (word.equals("on")) {
-                    live.messages().send(player, "invsnap.insurance.now-on", "price", price(live, player));
-                } else {
-                    live.messages().send(player, "invsnap.insurance.now-off");
-                }
-            }
+            case "on", "off" -> setDeath(live, player, word.equals("on"));
             case "item" -> item(live, player, args);
             case "" -> live.screens().insurance(player);
             default -> live.messages().send(player, "invsnap.insurance.usage");
+        }
+    }
+
+    /** Death insurance on or off for one player, with the answer they see; what {@code on|off} and /preferences both do. */
+    public static void setDeath(InvSnapServices live, Player player, boolean on) {
+        InsuranceService insurance = live.insurance();
+        if (!insurance.enabled()) {
+            live.messages().send(player, "invsnap.insurance.death-disabled");
+        } else if (!insurance.setInsured(player.getUniqueId(), on)) {
+            live.messages().send(player, "invsnap.insurance.not-saved");
+        } else if (on) {
+            live.messages().send(player, "invsnap.insurance.now-on", "price", price(live, player));
+        } else {
+            live.messages().send(player, "invsnap.insurance.now-off");
         }
     }
 
